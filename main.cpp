@@ -11,15 +11,19 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 #include <bits/stdc++.h>
+#include <iostream>
 
 #define Pi 3.1415927
+
+using namespace std;
+
 const GLdouble FRUSTDIM = 100.0f;
 
 int option = 0, i = 0;
 bool enableLight = 1;
 
 /* Do  animation 动画*/
-GLfloat angle = 0,tea_p = -40 , tea_face = 100 , donut_size = 3 , seat_pos = -60, board_pos = 65;
+GLfloat angle = 0,tea_p = -40 , tea_face = 100 , donut_size = 3 , seat_pos = -60, board_pos = -50;
 GLUquadricObj *quadobj;
 
 /* For lighting*/
@@ -647,7 +651,8 @@ void display(void) // Here's Where We Do All The Drawing
         // 最下面柜子
 		glPushMatrix();
 			glColor4f(0.8f, 0.8f, 0.3f,0.1f);
-			glTranslatef(-50.f, -70.f, 65.f);
+			// glTranslatef(-50.f, -70.f, 65.f);
+            glTranslatef(board_pos, -70.f, 65.f);
 			glRotatef(90.f, 0.f, 0.f, 30.f);
             glScalef(40.f, 70.0f, 40.f);//x:高 y:宽
 			glutSolidCube(1.f);
@@ -885,7 +890,7 @@ void reshape(int w, int h) // Resize the GL Window. w=width, h=height
 
 void keyboard(unsigned char key, int x, int y) // Handle the keyboard events here
 {
-	switch (key) 
+	switch (key)// 获取键盘值
 	{
 		case '\033':
 			exit(0);
@@ -895,36 +900,38 @@ void keyboard(unsigned char key, int x, int y) // Handle the keyboard events her
 			break;	
 
 		case '1': /*decrease light*/
-			if (enableLight)
-				if(light0_mat1[0] >= 0){
-					for (i=0; i<=3 ; i++){
-						light0_mat1[i] -= 0.01;
-						light0_diff[i] -= 0.01;
-					}
-					glLightfv(GL_LIGHT1, GL_AMBIENT, light0_mat1);
-					glLightfv(GL_LIGHT1, GL_DIFFUSE, light0_diff);
-					glEnable(GL_LIGHT1);
-				}
+		    option = 11;
+//			if (enableLight)
+//				if(light0_mat1[0] >= 0){
+//					for (i=0; i<=3 ; i++){
+//						light0_mat1[i] -= 0.01;
+//						light0_diff[i] -= 0.01;
+//					}
+//					glLightfv(GL_LIGHT1, GL_AMBIENT, light0_mat1);
+//					glLightfv(GL_LIGHT1, GL_DIFFUSE, light0_diff);
+//					glEnable(GL_LIGHT1);
+//				}
 			break;
 
 		case '2': /*increase light*/
-				if (enableLight)
-					if(light0_mat1[0] <= 1){
-						for (i=0; i<=3 ; i++){
-							light0_mat1[i] += 0.01;
-							light0_diff[i] += 0.01;
-						}
-					glLightfv(GL_LIGHT1, GL_AMBIENT, light0_mat1);
-					glLightfv(GL_LIGHT1, GL_DIFFUSE, light0_diff);
-					glEnable(GL_LIGHT1);
-				}
+		    option = 12;
+//				if (enableLight)
+//					if(light0_mat1[0] <= 1){
+//						for (i=0; i<=3 ; i++){
+//							light0_mat1[i] += 0.01;
+//							light0_diff[i] += 0.01;
+//						}
+//					glLightfv(GL_LIGHT1, GL_AMBIENT, light0_mat1);
+//					glLightfv(GL_LIGHT1, GL_DIFFUSE, light0_diff);
+//					glEnable(GL_LIGHT1);
+//				}
 			break;
 
 		case 's': /*switch on/off the light*/
 			option = 4;
 			break;
-		case '4':
-			option = 2;
+		case '4':// 顺时针旋转
+			option = 2;// 看option==2
 			break;
 		case '5':
 			option = 3;
@@ -935,16 +942,16 @@ void keyboard(unsigned char key, int x, int y) // Handle the keyboard events her
 		case '7':
 			option = 6;
 			break;	
-		case 'q':
+		case 'q':// 椅子向外移动
 			option = 7;
 			break;	
-		case 'w':
+		case 'w':// 椅子向内移动
 			option = 8;
 			break;
-		case 'e':
+		case 'e':// 柜子外移
 			option = 9;
 			break;	
-		case 'r':
+		case 'r':// 柜子内移
 			option = 10;
 			break;
 	}
@@ -956,23 +963,23 @@ void idle()
 	{
 
 	}
-	else if(option == 2)	/* Anti-clockwise */
+	else if(option == 2)	/* Anti-clockwise 逆时针*/
 	{
 		if(angle >= 360)
 			angle = 0;
-		angle++;
+		// angle++;
 	}
 	else if(option == 3)	/* Clockwise */
 	{
 		if(angle <= -360)
 			angle = 0;
-		angle--;
+		// angle--;
 	}
 	else if(option == 4)
 	{	
 		if(enableLight)
 		{
-			enableLight = 0;			
+			enableLight = 0;
 			for (i=0; i<=3 ; i++){
 				light0_mat1[i] = 0.0;
 			}
@@ -1005,7 +1012,7 @@ void idle()
 	}
 	else if(option == 7)
 	{
-		if(seat_pos >= -100)
+		if(seat_pos >= -80)
 			seat_pos -= 1;
 	}
 	
@@ -1015,22 +1022,49 @@ void idle()
 			seat_pos += 1;
 	}
 
-	else if(option == 9)
+	else if(option == 9)// 柜子外移
 	{
-		if(board_pos <= 160)
+//	    cout << "board_pos:" << board_pos << endl;
+		if(board_pos <= -40)
+            cout << "board_pos:" << board_pos << endl;
 			board_pos += 10;
 	}
 	else if(option == 10)
 	{
-		if(board_pos >= 75)
+		if(board_pos >= -50)
 			board_pos -= 10;
 	}
+    else if(option == 11)// 光线变弱
+    {
+        if (enableLight)
+            if(light0_mat1[0] >= 0){
+                for (i=0; i<=3 ; i++){
+                    light0_mat1[i] -= 0.01;
+                    light0_diff[i] -= 0.01;
+                }
+                glLightfv(GL_LIGHT1, GL_AMBIENT, light0_mat1);
+                glLightfv(GL_LIGHT1, GL_DIFFUSE, light0_diff);
+                glEnable(GL_LIGHT1);
+            }
+    }
+    else if(option == 12)// 光线变强
+    {
+        if (enableLight)
+            if(light0_mat1[0] <= 1){
+                for (i=0; i<=3 ; i++){
+                    light0_mat1[i] += 0.01;
+                    light0_diff[i] += 0.01;
+                }
+                glLightfv(GL_LIGHT1, GL_AMBIENT, light0_mat1);
+                glLightfv(GL_LIGHT1, GL_DIFFUSE, light0_diff);
+                glEnable(GL_LIGHT1);
+            }
+    }
 	else{}
 }
 
 int main(int argc, char** argv)
 {
-
 	/* Initialization of GLUT Library */
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
