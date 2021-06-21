@@ -12,6 +12,7 @@
 #include <GL/glut.h>
 #include <bits/stdc++.h>
 #include <iostream>
+#include <unistd.h>
 
 #define Pi 3.1415927
 
@@ -24,6 +25,11 @@ bool enableLight = 1;
 
 /* Do  animation 动画*/
 GLfloat angle = 0,tea_p = -40 , tea_face = 100 , donut_size = 3 , seat_pos = -60, board_pos = -50;
+GLboolean deskLight = false;
+
+clock_t clock_agl1 = 0;// 分针
+clock_t clock_agl2 = 90;// 时针
+
 GLUquadricObj *quadobj;
 
 /* For lighting*/
@@ -75,23 +81,26 @@ void init(void) // All Setup For OpenGL Goes Here
 //吊灯
 void draw_light(void)
 {
-    GLfloat matBlack[] = { 0.0f,0.0f,0.0f,1.0f };
-    GLfloat matWhite[] = { 0.0f,0.0f,0.0f,0.0f };
-    GLfloat matShininess[] = { 0.0f,0.1f,0.0f,0.0f };
-    GLfloat matYellow[] = { 0.0f,0.0f,0.5f,0.0f };
+    // 定义相关材料参数params
+    GLfloat matBlack_light[] = { 0.0f,0.0f,0.0f,1.0f };
+    GLfloat matWhite_light[] = { 0.0f,0.0f,0.0f,0.0f };
+    GLfloat matShininess_light[] = { 0.0f,0.1f,0.0f,0.0f };
+    GLfloat matYellow_light[] = { 0.0f,0.0f,0.5f,0.0f };
     bool aCeilingLight = true;
 
     glPushMatrix();					//Celling Light
+
     glColor3f(1, 1, 0);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, matYellow);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, matYellow);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, matWhite);
-    glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
-    glMaterialfv(GL_FRONT, GL_EMISSION, matBlack);
-    if(aCeilingLight) glMaterialfv(GL_FRONT, GL_EMISSION, matYellow);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, matYellow_light);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, matYellow_light);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, matWhite_light);
+    glMaterialfv(GL_FRONT, GL_SHININESS, matShininess_light);
+    glMaterialfv(GL_FRONT, GL_EMISSION, matBlack_light);
+    if(aCeilingLight) glMaterialfv(GL_FRONT, GL_EMISSION, matYellow_light);
     glTranslatef(0,8.99,-10);
     glRotatef(90, 1, 0, 0);
     glutSolidCone(1,1,16,16);
+
     glPopMatrix();
 }
 
@@ -188,20 +197,20 @@ void draw_bed(void)
 }
 
 //电视
-void draw_tv(void)
+void draw_air_conditioning(void)
 {
     bool tv_open = false;
     glPushMatrix();
-    glTranslatef(-100, 0, 100);
+    glTranslatef(-100, 50, 100);
 
     //电视机/电脑
     glPushMatrix();
     glTranslatef(0, 10, -2);
-    glScalef( 5.3, 30, 75);
-    glColor3f(0.0, 0.0, 0.0);
+    glScalef( 8.3, 20, 85);
+    glColor3f(1.0, 1.0, 1.0);// 白色
     glutSolidCube(1);
     glLineWidth(4);
-    glColor3f(0.0, 0.0, 1.0);
+    glColor3f(1.0, 1.0, 1.0);
     glutWireCube(1);
     glLineWidth(1);
     glPopMatrix();
@@ -285,7 +294,7 @@ void display(void) // Here's Where We Do All The Drawing
 	glLoadIdentity();
 	glPushMatrix();
 	glTranslatef(0, 0, -550);
- 
+
 	/* Initialize material properties */
 	GLfloat no_mat[] = {0.0,0.0,0.0,1.0};
 	GLfloat mat_diffuse[] = {0.9,0.9,0.9,1.0};
@@ -303,8 +312,10 @@ void display(void) // Here's Where We Do All The Drawing
 
 	/* 房间元素区域 */
 
-//    draw_bed();
-    draw_tv();
+    // draw_bed();
+    draw_air_conditioning();
+    // 吊灯
+//    draw_light();
 
 	// 花瓶
 //    glPushMatrix();
@@ -463,6 +474,21 @@ void display(void) // Here's Where We Do All The Drawing
 
         /* 台灯 */
         glPushMatrix();
+
+            // 定义相关材料参数params
+            GLfloat matBlack_light[] = { 0.0f,0.0f,0.0f,1.0f };
+            GLfloat matWhite_light[] = { 0.0f,0.0f,0.0f,0.0f };
+            GLfloat matShininess_light[] = { 0.0f,0.1f,0.0f,0.0f };
+            GLfloat matYellow_light[] = { 0.0f,0.0f,0.5f,0.0f };
+            // bool aCeilingLight = false;
+
+            glMaterialfv(GL_FRONT, GL_AMBIENT, matYellow_light);
+            glMaterialfv(GL_FRONT, GL_DIFFUSE, matYellow_light);
+            glMaterialfv(GL_FRONT, GL_SPECULAR, matWhite_light);
+            glMaterialfv(GL_FRONT, GL_SHININESS, matShininess_light);
+            glMaterialfv(GL_FRONT, GL_EMISSION, matBlack_light);
+            if(deskLight) glMaterialfv(GL_FRONT, GL_EMISSION, matYellow_light);
+
 //            glTranslatef(20.f, 20.f, 0.f);
             /* 台灯灯罩 */
             glPushMatrix();					//Celling Light
@@ -514,7 +540,7 @@ void display(void) // Here's Where We Do All The Drawing
         // 长竖棍后
         glPushMatrix();
             // 控制椅子上所有line的颜色
-            glColor3f(1.25f, 0.0f, 0.0f);
+            glColor3f(0.0f, 0.0f, 0.0f);
             glTranslatef(70.f,0.f,0.f);
             glRotatef(-90, 1.f, 0.f, 0.f);
             gluCylinder(quadobj, 2.f, 2.f, 77, 20, 20);
@@ -679,25 +705,25 @@ void display(void) // Here's Where We Do All The Drawing
 
 
 /*Draw Light bulb START*/
-	
+
 	glPushMatrix();
 			glColor4f(0.8f, 0.8f, 0.7f,0.1f);
 			glTranslatef(0.f, 90.f, 200);
-			glRotatef(-90.f, 1.f, 0.f, 0.f);	
+			glRotatef(-90.f, 1.f, 0.f, 0.f);
 			glutSolidTorus(2 , 2, 110.f, 110.f);
 	glPopMatrix();
 
 	glPushMatrix();
 			glColor4f(0.8f, 0.8f, 0.7f,0.1f);
 			glTranslatef(0.f, 87.f, 200);
-			glRotatef(-90.f, 1.f, 0.f, 0.f);	
+			glRotatef(-90.f, 1.f, 0.f, 0.f);
 			glutSolidTorus(2 , 2, 110.f, 110.f);
 		glPopMatrix();
 
 	glPushMatrix();
 			glColor4f(0.8f, 0.8f, 0.7f,0.1f);
 			glTranslatef(0.f, 84.f, 200);
-			glRotatef(-90.f, 1.f, 0.f, 0.f);	
+			glRotatef(-90.f, 1.f, 0.f, 0.f);
 			glutSolidTorus(2 , 2, 110.f, 110.f);
 	glPopMatrix();
 
@@ -785,9 +811,16 @@ void display(void) // Here's Where We Do All The Drawing
 	/* 时钟 */
     glPushMatrix();
         // 角度
-        clock_t clock_agl1 = 0;
-        clock_t clock_agl2 = 90;
+//        clock_t clock_agl1 = 0;// 时针
+//        clock_t clock_agl2 = 180;// 分针
 //        Pi = 3.14;
+//        while(clock_agl2 < 720){
+//            clock_agl2 ++;
+//            if (clock_agl2 % 360 == 0){
+//                clock_agl2 ++;
+//                clock_agl1 ++;
+//            }
+//        }
 
         glTranslatef(50, 40, -19.0);
         glScalef(10.f, 10.f, 10.f);
@@ -801,6 +834,7 @@ void display(void) // Here's Where We Do All The Drawing
         glVertex3f(0, 0, 0);
         glVertex3f(1, 0, 0);
         glVertex3f(0, 0, 0);
+//        glLineWidth(10);
         glVertex3f(1 * cos(clock_agl2 * Pi / 180), 1.5 * sin(clock_agl2 * Pi / 180), 0);
         glColor3f(0.0f,0.0f,0.0f);
         glVertex3f(0, 1.9, 0);
@@ -815,6 +849,7 @@ void display(void) // Here's Where We Do All The Drawing
         glLineWidth(1);
         glColor3f(0.25, 0.25, 0.25);
         gluDisk(quadobj, 0, 2.2, 20, 4);
+        glFlush();// 刷新
     glPopMatrix();
 
 	/* Draw the wall START */
@@ -822,7 +857,7 @@ void display(void) // Here's Where We Do All The Drawing
 	glBegin(GL_TRIANGLE_FAN);
 		glColor3f(1.f,0.54f,0.f);
 		glVertex3f(-110.0f, 110.0f, -200.0f);
-		glVertex3f(-110.0f, -110.0f, -200.0f);	
+		glVertex3f(-110.0f, -110.0f, -200.0f);
 		glVertex3f(110.0f, -110.0f, -200.0f);
 		glVertex3f(110.0f, 110.0f,-200.0f);
 	glEnd();
@@ -836,7 +871,7 @@ void display(void) // Here's Where We Do All The Drawing
 		glVertex3f(-190.0f, 190.0f, 0.0f);
 	glEnd();
 
-	glBegin(GL_QUADS);	
+	glBegin(GL_QUADS);
 		/* Bottom wall */
 		glColor3f(0.8f,0.44f,0.0f);
 		glVertex3f(80.f, -80.f, 0.f);
@@ -869,7 +904,7 @@ void display(void) // Here's Where We Do All The Drawing
 	glPopMatrix();
 
 	glutSwapBuffers();
-	glFlush();	
+	glFlush();
 
 	/* Refresh the frame */
 	glutPostRedisplay();
@@ -930,10 +965,10 @@ void keyboard(unsigned char key, int x, int y) // Handle the keyboard events her
 		case 's': /*switch on/off the light*/
 			option = 4;
 			break;
-		case '4':// 顺时针旋转
+		case '3':// 控制台灯 开
 			option = 2;// 看option==2
 			break;
-		case '5':
+		case '5':// 时钟
 			option = 3;
 			break;
 		case '6':
@@ -963,17 +998,77 @@ void idle()
 	{
 
 	}
-	else if(option == 2)	/* Anti-clockwise 逆时针*/
+	else if(option == 2)	/* 控制台灯开关 */
 	{
-		if(angle >= 360)
-			angle = 0;
-		// angle++;
+        if(enableLight)// 如果灯开着，则关灯 和大灯一致 都是黑暗
+        {
+            enableLight = 0;
+            for (i=0; i<=3 ; i++){
+                light0_mat1[i] = 0.0;
+            }
+            glLightfv(GL_LIGHT1, GL_AMBIENT, light0_mat1);
+            glDisable(GL_LIGHT1);
+            option = 1;
+        }
+        else// 如果等关闭，则开灯，灯光的强度和散度都减半
+        {
+            enableLight = 1;
+            for (i=0; i<=3 ; i++){
+                light0_diff[i] = 0.5;
+                light0_mat1[i] = 0.5;
+            }
+            glLightfv(GL_LIGHT1, GL_AMBIENT, light0_mat1);
+            glLightfv(GL_LIGHT1, GL_DIFFUSE, light0_diff);
+            glEnable(GL_LIGHT1);
+            option = 1;
+        }
 	}
 	else if(option == 3)	/* Clockwise */
 	{
-		if(angle <= -360)
-			angle = 0;
-		// angle--;
+	    // clock_agl2 = 180;
+	    int a = 1;
+        clock_agl1 += 90;
+		if (clock_agl1 % 360 == 0) {
+
+            // clock_agl1 += 45;
+//            cout << "clock_agl1:" << clock_agl1 << endl;
+
+//            if (clock_agl1 % 360 == 0) {
+            clock_agl2 += 30;
+//                cout << "clock_agl2:" << clock_agl2 << endl;
+//            }
+//            cout << "before sleep" << endl;
+//            sleep(a);
+//            cout << "after sleep" << endl;
+		}
+        glutPostRedisplay(); // 重画
+		sleep(a);
+//		while(clock_agl2 < 270) {
+//
+//		    clock_agl2 += 90;
+//		    cout << "clock_agl2:" << clock_agl2 << endl;
+//
+//		    if (clock_agl2 % 360 == 0) {
+//		        clock_agl1 += 30;
+//		        cout << "clock_agl1:" << clock_agl1 << endl;
+//		    }
+//		    cout << "before sleep" << endl;
+//		    sleep(a);
+//		    cout << "after sleep" << endl;
+//		}
+//		while(clock_agl2 < 360) {
+//
+//		    clock_agl2 += 90;
+//		    cout << "clock_agl2:" << clock_agl2 << endl;
+//
+//		    if (clock_agl2 % 360 == 0) {
+//		        clock_agl1 += 30;
+//		        cout << "clock_agl1:" << clock_agl1 << endl;
+//		    }
+//		    cout << "before sleep" << endl;
+//		    sleep(a);
+//		    cout << "after sleep" << endl;
+//		}
 	}
 	else if(option == 4)
 	{	
@@ -1025,14 +1120,15 @@ void idle()
 	else if(option == 9)// 柜子外移
 	{
 //	    cout << "board_pos:" << board_pos << endl;
-		if(board_pos <= -40)
-            cout << "board_pos:" << board_pos << endl;
-			board_pos += 10;
+		if(board_pos < -25){
+            // cout << "board_pos:" << board_pos << endl;
+            board_pos += 5;
+		}
 	}
 	else if(option == 10)
 	{
-		if(board_pos >= -50)
-			board_pos -= 10;
+		if(board_pos > -50)
+			board_pos -= 5;
 	}
     else if(option == 11)// 光线变弱
     {
