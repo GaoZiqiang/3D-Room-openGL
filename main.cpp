@@ -25,7 +25,7 @@ bool enableLight = 1;
 
 /* Do  animation 动画*/
 GLfloat angle = 0,tea_p = -40 , tea_face = 100 , donut_size = 3 , seat_pos = -60, board_pos = -50;
-GLboolean deskLight = false;
+GLboolean deskLight = false, air_open = false;
 
 clock_t clock_agl1 = 0;// 分针
 clock_t clock_agl2 = 90;// 时针
@@ -196,90 +196,72 @@ void draw_bed(void)
 
 }
 
-//电视
+// 空调
 void draw_air_conditioning(void)
 {
-    bool tv_open = false;
+//    bool tv_open = false;
     glPushMatrix();
     glTranslatef(-100, 50, 100);
 
-    //电视机/电脑
-    glPushMatrix();
-    glTranslatef(0, 10, -2);
-    glScalef( 8.3, 20, 85);
-    glColor3f(1.0, 1.0, 1.0);// 白色
-    glutSolidCube(1);
-    glLineWidth(4);
-    glColor3f(1.0, 1.0, 1.0);
-    glutWireCube(1);
-    glLineWidth(1);
-    glPopMatrix();
-
-    glPopMatrix();
-
-    //电视桌
-    glPushMatrix();
-
-    glTranslatef(17.0, -8.8, -3);
-    glScalef(0.9, 0.6, 0.7);
-
-    glColor3f(1, 0.6, 0.3);
-
-    glPushMatrix();
-    glTranslatef(0, 0, -10);
-    glScalef( 4, 4, 0.5);
-//    glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0, 0, 0);
-    glScalef( 4, 4, 0.5);
-//    glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0, 2.25, -5);
-    glScalef( 4, 0.5, 10.5);
-    glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0, 8.25, -5);
-    glScalef( 4, 0.5, 10.5);
-//    glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0, 5.25, -10);
-    glScalef( 4, 6, 0.5);
-//    glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0, 5.25, -5);
-    glScalef( 4, 6, 0.5);
-//    glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0, 5.25, 0);
-    glScalef( 4, 6, 0.5);
-//    glutSolidCube(1);
-    glPopMatrix();
-
-    if(tv_open){
+    // 空调
+    if (air_open){// 开空调
         glPushMatrix();
-        glTranslatef(0.8, 12, -9.5);
-        glScalef(0.001, 0.05, 0.02);
-        glRotated(-90, 0, 1, 0);
-        glColor3f(1.0f,0.0f,0.0f);
-        glutStrokeCharacter(GLUT_STROKE_ROMAN, 'H');
-        glutStrokeCharacter(GLUT_STROKE_ROMAN, 'E');
-        glutStrokeCharacter(GLUT_STROKE_ROMAN, 'L');
-        glutStrokeCharacter(GLUT_STROKE_ROMAN, 'L');
-        glutStrokeCharacter(GLUT_STROKE_ROMAN, 'O');
+        glTranslatef(0, 10, -2);
+        glScalef( 8.3, 20, 86);
+        glColor3f(1.0, 1.0, 1.0);// 白色
+        glutSolidCube(1);
+        glLineWidth(4);
+        glColor3f(1, 1, 1);
+        glutWireCube(1);
+        glLineWidth(1);
+        glPopMatrix();
+
+
+        glPushMatrix();
+        glTranslatef(0, -1, 0);
+        glScalef( 0.001, 0.001, 83);
+        glColor3f(0.0, 0.0, 0.0);// 黑色
+        glutSolidCube(1);
+        glLineWidth(3);
+        glColor3f(0.0, 0.0, 0.0);
+        glutWireCube(1);
+        glLineWidth(1);
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(3.0, -0.5, 0);
+        glScalef( 0.001, 0.001, 83);
+        glColor3f(0.0, 0.0, 0.0);// 黑色
+        glutSolidCube(1);
+        glLineWidth(3);
+        glColor3f(0.0, 0.0, 0.0);
+        glutWireCube(1);
+        glLineWidth(1);
+        glPopMatrix();
+
+//        glPushMatrix();
+//        glTranslatef(5.5, 0, 0);
+//        glScalef( 0.001, 0.001, 83);
+//        glColor3f(0.0, 0.0, 0.0);// 黑色
+//        glutSolidCube(1);
+//        glLineWidth(3);
+//        glColor3f(0.0, 0.0, 0.0);
+//        glutWireCube(1);
+//        glLineWidth(1);
+//        glPopMatrix();
+    }else{// 关空调
+        glPushMatrix();
+        glTranslatef(0, 10, -2);
+        glScalef( 8.3, 20, 86);
+        glColor3f(1.0, 1.0, 1.0);// 白色
+        glutSolidCube(1);
+        glLineWidth(4);
+        glColor3f(1, 1, 1);
+        glutWireCube(1);
+        glLineWidth(1);
         glPopMatrix();
     }
+
     glPopMatrix();
 
 }
@@ -311,41 +293,16 @@ void display(void) // Here's Where We Do All The Drawing
 
 
 	/* 房间元素区域 */
-
-    // draw_bed();
     draw_air_conditioning();
-    // 吊灯
-//    draw_light();
-
-	// 花瓶
-//    glPushMatrix();
-//        glTranslatef(16, -5.5, -7);
-//
-//        glPushMatrix();
-//        glScalef(0.1, 0.1, 0.1);
-//        glTranslatef(-40, 0 ,0);
-////        draw_tree();
-//        glPopMatrix();
-//
-//        glPushMatrix();
-//        glScalef(1, 1, 0.75);
-//        glTranslatef(0.21, -0.75, -0.55);
-//        glColor3f(0.0f,0.0f,1.0f);
-////        constract(-1, -1, 0, 1, 1, -1);
-////        build();
-//        glPopMatrix();
-//
-//    glPopMatrix();
 
     // 床腿
     /* Draw a Bed START */
     glPushMatrix();
-//    glTranslatef(-100.f, 0.f,100.f);
         glTranslatef(-50.f, -20.f, 195.f);
 
         // 床腿板子设置
         glPushMatrix();
-        glColor4f(0.f, 0.0f, 1.0f,0.1f);
+        glColor4f(0.2f, 0.2f, 0.2f,0.1f);
         glTranslatef(0.f, -45.f, 65.f);
         glRotatef(90.f, 0.f, 0.f, 30.f);
         glScalef(70.f, 100.0f, 40.f);//x:高 y:宽 z:长
@@ -367,33 +324,15 @@ void display(void) // Here's Where We Do All The Drawing
 
     /* Draw a support for table 支柱*/
     glPushMatrix();
-    glColor3f(0.0f, 0.23f, 0.168f);
+    glColor3f(0.2f, 0.2f, 0.2f);
     glTranslatef(0.f, -90.f, 130.f);
     glRotatef(-90, 1.f, 0.f, 0.f);
     gluCylinder(quadobj, 10.f, 5.f, 40.f, 20.f, 20.f);
     glPopMatrix();
 
-    // 床上加一床被子
-
-    /* form the table (cyclinder part) 柱面*/
-//    glPushMatrix();
-//    glColor3f(0.168f, 0.23f, 1.0f);
-//    glTranslatef(0.f, -50.f, 130.f);
-//    glRotatef(-90, 1.f, 0.f, 0.f);
-//    gluCylinder(quadobj, 50.f, 50.f, 10.2f, 30.f, 30.f);
-//    glPopMatrix();
-
-    /*form the table (upper part) 上面圆盘*/
-//    glPushMatrix();
-//    glColor3f(0.168f, 0.23f, 1.0f);
-//    glTranslatef(0.f, -40.f, 130.f);
-//    glRotatef(-90, 1.f, 0.f, 0.f);
-//    gluDisk(quadobj, 0.f, 50.7f, 20.f, 20.f);
-//    glPopMatrix();
-
     // 床面
     glPushMatrix();
-        glColor4f(0.0f, 0.8f, 0.0f,0.1f);
+        glColor3f(0.2f, 0.2f, 0.2f);
         glTranslatef(0.f, -45.f, 65.f);
         glRotatef(90.f, 0.f, 0.f, 30.f);
         glScalef(25.f, 100.0f, 400.f);//x:高 y:宽 z:长
@@ -429,38 +368,14 @@ void display(void) // Here's Where We Do All The Drawing
 	glPushMatrix();
 		glTranslatef(100.f, 0.f,-100.f);
 
-		/* Draw a support for table 支柱*/
-//		glPushMatrix();
-//			glColor3f(0.0f, 0.23f, 0.168f);
-//			glTranslatef(0.f, -90.f, 130.f);
-//			glRotatef(-90, 1.f, 0.f, 0.f);
-//			gluCylinder(quadobj, 10.f, 5.f, 40.f, 20.f, 20.f);
-//		glPopMatrix();
-
 		/* form the table (cyclinder part) 柱面*/
         glPushMatrix();
-        glColor3f(0.168f, 0.23f, 1.0f);
+        glColor3f(1.0f, 1.0f, 1.0f);
         glTranslatef(0.f, -45.f, 130.f);
 //        glRotatef(-90, 1.f, 0.f, 0.f);
         glScalef(130.f, 15.0f, 120.f);//x:宽度 y:厚度 z:长度
-        glutSolidCube(0.7f);// 床的厚度
+        glutSolidCube(0.7f);// 厚度
         glPopMatrix();
-
-//		glPushMatrix();
-//			glColor3f(0.168f, 0.23f, 1.0f);
-//			glTranslatef(0.f, -50.f, 130.f);
-//			glRotatef(-90, 1.f, 0.f, 0.f);
-//			gluCylinder(quadobj, 50.f, 50.f, 10.2f, 30.f, 30.f);
-//		glPopMatrix();
-
-//		// 圆盘可以不要了
-//		/*form the table (upper part) 上面圆盘*/
-//		glPushMatrix();
-//			glColor3f(0.168f, 0.23f, 1.0f);
-//			glTranslatef(0.f, -40.f, 130.f);
-//			glRotatef(-90, 1.f, 0.f, 0.f);
-//			gluDisk(quadobj, 0.f, 50.7f, 20.f, 20.f);
-//		glPopMatrix();
 
 		/* Rotate with angle */
 		glTranslatef(0.f, -40.f, 130.f);
@@ -517,15 +432,6 @@ void display(void) // Here's Where We Do All The Drawing
             gluCylinder(quadobj, 10.f, 10.f, 5.f, 30.f, 30.f);
             glPopMatrix();
         glPopMatrix();
-
-		/*Draw a donut 甜甜圈*/
-//		glPushMatrix();
-//			glColor3f(0.4f, 0.20f, 0.f);
-////			glTranslatef(30.f,donut_size, 0.f);
-//            glTranslatef(-30.f, 10.f, 0.f);
-//			glRotatef(-90.f, 1.f, 0.f, 0.f);
-//			glutSolidTorus(donut_size - 1 , donut_size, 110.f, 110.f);
-//		glPopMatrix();
 
 	glPopMatrix();
 	/* draw a table END */
@@ -620,16 +526,6 @@ void display(void) // Here's Where We Do All The Drawing
 	glTranslatef(-seat_pos, 100.f, -98.f);
 /* Draw seat END*/
 
-    // 柜子
-	/*Draw board START*/
-	    // 纽扣注释掉
-	    // 最上面绿色纽扣
-//		glPushMatrix();
-//			glColor3f(0.168f, 0.522f, 0.169f);
-//			glTranslatef(-50.f, 20.f, 140.f);
-//			glutSolidSphere(3.f, 10.f, 10.f);
-//		glPopMatrix();
-
 		// 最下面黑色横条
 		glPushMatrix();
 			glColor4f(0.0f, 0.0f, 0.0f,0.1f);
@@ -647,23 +543,6 @@ void display(void) // Here's Where We Do All The Drawing
             glScalef(40.f, 70.0f, 40.f);//x:高 y:宽
 			glutSolidCube(1.f);
 		glPopMatrix();
-
-		// 纽扣注释掉
-		// 中间绿色纽扣
-//		glPushMatrix();
-//			glColor3f(0.168f, 0.522f, 0.169f);
-//			glTranslatef(-50.f, -25.f, 140.f);
-//			glutSolidSphere(3.f, 10.f, 10.f);
-//		glPopMatrix();
-
-        // 上面黑色横条
-//		glPushMatrix();
-//			glColor4f(0.0f, 0.0f, 0.0f,0.1f);
-//			glTranslatef(-50.f, -3.f, 65.f);
-//			glRotatef(90.f, 0.f, 0.f, 30.f);
-//            glScalef(7.f, 70.0f, 40.f);//x:高 y:宽
-//			glutSolidCube(1.f);
-//		glPopMatrix();
 
 		// 最上面柜子
 		glPushMatrix();
@@ -683,26 +562,6 @@ void display(void) // Here's Where We Do All The Drawing
             glScalef(40.f, 70.0f, 40.f);//x:高 y:宽
 			glutSolidCube(1.f);
 		glPopMatrix();
-
-		// 多出一节柜子？
-//		glPushMatrix();
-//			glColor4f(0.8f, 0.8f, 0.3f,0.1f);
-//			glTranslatef(50.f, -70.f, board_pos);
-//			glRotatef(90.f, 0.f, 0.f, 30.f);
-//			glScalef(40.f, 60.0f, 150.f);
-//			glutSolidCube(1.f);
-//		glPopMatrix();
-
-        // 纽扣注释掉
-        // 最下面绿色纽扣
-//		glPushMatrix();
-//			glColor3f(0.168f, 0.522f, 0.169f);
-//			glTranslatef(-50.f, -68.f, board_pos + 75);
-//			glutSolidSphere(3.f, 10.f, 10.f);
-//		glPopMatrix();
-    /*Draw board END*/
-
-
 
 /*Draw Light bulb START*/
 
@@ -734,79 +593,7 @@ void display(void) // Here's Where We Do All The Drawing
 			glutSolidSphere(10.f, 50.f, 50.f);
 	glPopMatrix();
 			glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
-
 /*Draw Light bulb END*/
-
-	/*Draw Calender START*/
-	// Caldender上面红色板子
-//	glBegin(GL_POLYGON);
-//		glColor3f(1.0f,0.2f,0.2f);
-//		glVertex3f(85.0, 100.0,-200.f);// 顶点表示日期
-//		glVertex3f(15.0, 100.0,-200.f);
-//		glColor3f(1.0f,0.0f,0.0f);
-//		glVertex3f(15.0, 50.0,-200.f);
-//		glVertex3f(85.0, 50.0,-200.f);
-//	glEnd();
-//
-//    // Caldender下面白色板子
-//	glBegin(GL_POLYGON);
-//		glColor3f(0.8f,0.8f,0.8f);
-//		glVertex3f(85.0, 50.0,-200.f);
-//		glVertex3f(15.0, 50.0,-200.f);
-//		glVertex3f(15.0, 0.0,-200.f);
-//		glVertex3f(85.0, 0.0,-200.f);
-//	glEnd();
-//
-//
-//	glBegin(GL_LINES);
-//        // 下面白色板子上的横向格子
-//		glColor3f(0.7,0.7,0.7);
-//		for(i=50;i>=0;i-=10){
-//			glVertex3f(85.0, i,-199.f);
-//			glVertex3f(15.0, i,-199.f);
-//		}
-//
-//        // 下面白色板子上的竖向格子
-//		for(i=-15;i>=-85;i-=10){
-//			glVertex3f(-i, 50.0,-199.f);
-//			glVertex3f(-i, 0.0,-199.f);
-//		}
-//	glEnd();
-//		// Calender上的日期点
-//	glPointSize(5);
-//	glBegin(GL_POINTS);
-//		glColor3f(0.5f,0.5f,0.f);
-//		glVertex3f(24.0, 45.0,-199.f);
-//		glVertex3f(53.0, 37.0,-199.f);
-//		glVertex3f(77.0, 26.0,-199.f);
-//		glVertex3f(59.0, 26.0,-199.f);
-//		glVertex3f(29.0, 16.0,-199.f);
-//	glEnd();
-//
-//	glBegin(GL_TRIANGLES);
-//		glColor3f(0.5f,0.5f,0.5f);
-//		glVertex3f(55.0, 80.0,-199.f);
-//		glVertex3f(75.0, 90.0,-199.f);
-//		glVertex3f(77.0, 82.0,-199.f);
-//	glEnd();
-//
-//	// Calender上面红色板子的两个耳朵
-//	glBegin(GL_TRIANGLES);
-//		glColor3f(0.5f,0.5f,0.5f);
-//		glVertex3f(45.0, 80.0,-199.f);
-//		glVertex3f(25.0, 90.0,-199.f);
-//		glVertex3f(23.0, 82.0,-199.f);
-//	glEnd();
-//
-//    // Calender上面红色板子的嘴巴
-//	glBegin(GL_POLYGON);
-//		glColor3f(0.45f,0.45f,0.45f);
-//		glVertex3f(60.0, 67.0,-199.f);
-//		glVertex3f(40.0, 67.0,-199.f);
-//		glVertex3f(40.0, 62.0,-199.f);
-//		glVertex3f(60.0, 62.0,-199.f);
-//	glEnd();
-	/*Draw Calender END*/
 
 	/* 时钟 */
     glPushMatrix();
@@ -814,13 +601,6 @@ void display(void) // Here's Where We Do All The Drawing
 //        clock_t clock_agl1 = 0;// 时针
 //        clock_t clock_agl2 = 180;// 分针
 //        Pi = 3.14;
-//        while(clock_agl2 < 720){
-//            clock_agl2 ++;
-//            if (clock_agl2 % 360 == 0){
-//                clock_agl2 ++;
-//                clock_agl1 ++;
-//            }
-//        }
 
         glTranslatef(50, 40, -19.0);
         glScalef(10.f, 10.f, 10.f);
@@ -936,30 +716,10 @@ void keyboard(unsigned char key, int x, int y) // Handle the keyboard events her
 
 		case '1': /*decrease light*/
 		    option = 11;
-//			if (enableLight)
-//				if(light0_mat1[0] >= 0){
-//					for (i=0; i<=3 ; i++){
-//						light0_mat1[i] -= 0.01;
-//						light0_diff[i] -= 0.01;
-//					}
-//					glLightfv(GL_LIGHT1, GL_AMBIENT, light0_mat1);
-//					glLightfv(GL_LIGHT1, GL_DIFFUSE, light0_diff);
-//					glEnable(GL_LIGHT1);
-//				}
 			break;
 
 		case '2': /*increase light*/
 		    option = 12;
-//				if (enableLight)
-//					if(light0_mat1[0] <= 1){
-//						for (i=0; i<=3 ; i++){
-//							light0_mat1[i] += 0.01;
-//							light0_diff[i] += 0.01;
-//						}
-//					glLightfv(GL_LIGHT1, GL_AMBIENT, light0_mat1);
-//					glLightfv(GL_LIGHT1, GL_DIFFUSE, light0_diff);
-//					glEnable(GL_LIGHT1);
-//				}
 			break;
 
 		case 's': /*switch on/off the light*/
@@ -974,9 +734,12 @@ void keyboard(unsigned char key, int x, int y) // Handle the keyboard events her
 		case '6':
 			option = 5;
 			break;	
-		case '7':
-			option = 6;
-			break;	
+		case '7':// 空调开
+			option = 13;
+			break;
+        case '8':// 空调关
+            option = 14;
+            break;
 		case 'q':// 椅子向外移动
 			option = 7;
 			break;	
@@ -1029,46 +792,10 @@ void idle()
 	    int a = 1;
         clock_agl1 += 90;
 		if (clock_agl1 % 360 == 0) {
-
-            // clock_agl1 += 45;
-//            cout << "clock_agl1:" << clock_agl1 << endl;
-
-//            if (clock_agl1 % 360 == 0) {
             clock_agl2 += 30;
-//                cout << "clock_agl2:" << clock_agl2 << endl;
-//            }
-//            cout << "before sleep" << endl;
-//            sleep(a);
-//            cout << "after sleep" << endl;
 		}
         glutPostRedisplay(); // 重画
 		sleep(a);
-//		while(clock_agl2 < 270) {
-//
-//		    clock_agl2 += 90;
-//		    cout << "clock_agl2:" << clock_agl2 << endl;
-//
-//		    if (clock_agl2 % 360 == 0) {
-//		        clock_agl1 += 30;
-//		        cout << "clock_agl1:" << clock_agl1 << endl;
-//		    }
-//		    cout << "before sleep" << endl;
-//		    sleep(a);
-//		    cout << "after sleep" << endl;
-//		}
-//		while(clock_agl2 < 360) {
-//
-//		    clock_agl2 += 90;
-//		    cout << "clock_agl2:" << clock_agl2 << endl;
-//
-//		    if (clock_agl2 % 360 == 0) {
-//		        clock_agl1 += 30;
-//		        cout << "clock_agl1:" << clock_agl1 << endl;
-//		    }
-//		    cout << "before sleep" << endl;
-//		    sleep(a);
-//		    cout << "after sleep" << endl;
-//		}
 	}
 	else if(option == 4)
 	{	
@@ -1155,6 +882,16 @@ void idle()
                 glLightfv(GL_LIGHT1, GL_DIFFUSE, light0_diff);
                 glEnable(GL_LIGHT1);
             }
+    }
+    else if(option == 13)
+    {
+        if (!air_open)
+            air_open = true;
+    }
+    else if(option == 14)
+    {
+        if (air_open)
+            air_open = false;
     }
 	else{}
 }
